@@ -21,10 +21,10 @@ namespace AquariumForum.Models
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
         [Display(Name = "List of Comments")]
-        public List<Comment> Comments { get; set; } = [];
+        public List<Comment> Comments { get; set; } = []; // navigation property
 
         [NotMapped]
         [Display(Name = "Image")]
-        public IFormFile? ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; } // not stored in database
     }
 }

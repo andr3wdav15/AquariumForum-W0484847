@@ -8,12 +8,12 @@ namespace AquariumForum.Controllers
     {
         private readonly AquariumForumContext _context;
 
-        public CommentsController(AquariumForumContext context)
+        public CommentsController(AquariumForumContext context) // initialize with database context
         {
             _context = context;
         }
 
-        public async Task<IActionResult> Create(int discussionId)
+        public async Task<IActionResult> Create(int discussionId) // displays form for new comment
         {
             var discussion = await _context.Discussion.FindAsync(discussionId);
             if (discussion == null)
@@ -27,7 +27,7 @@ namespace AquariumForum.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(string content, int discussionId)
+        public async Task<IActionResult> Create(string content, int discussionId) // handles form submission
         {
             var discussion = await _context.Discussion.FindAsync(discussionId);
             if (discussion == null)

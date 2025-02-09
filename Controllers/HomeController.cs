@@ -8,12 +8,12 @@ namespace AquariumForum.Controllers
     {
         private readonly AquariumForumContext _context;
 
-        public HomeController(AquariumForumContext context)
+        public HomeController(AquariumForumContext context) // initializes with database context
         {
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() // displays list of discussions, descending order
         {
             var discussions = await _context
                 .Discussion.Include(d => d.Comments)
@@ -23,7 +23,7 @@ namespace AquariumForum.Controllers
             return View(discussions);
         }
 
-        public async Task<IActionResult> GetDiscussion(int? id)
+        public async Task<IActionResult> GetDiscussion(int? id) // displays details of specific discussion including comments for that discussion
         {
             if (id == null)
             {
@@ -42,7 +42,7 @@ namespace AquariumForum.Controllers
             return View(discussion);
         }
 
-        public IActionResult Privacy()
+        public IActionResult Privacy() // displays privacy policy
         {
             return View();
         }

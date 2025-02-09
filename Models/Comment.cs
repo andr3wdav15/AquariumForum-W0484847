@@ -14,7 +14,7 @@ namespace AquariumForum.Models
         public DateTime CreateDate { get; set; } = DateTime.Now;
 
         [Display(Name = "Discussion ID")]
-        public int DiscussionId { get; set; }
-        public Discussion? Discussion { get; set; }
+        public int DiscussionId { get; set; } // foreign key
+        public Discussion? Discussion { get; set; } // navigation property
     }
 }

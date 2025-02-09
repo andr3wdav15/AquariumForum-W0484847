@@ -9,17 +9,17 @@ namespace AquariumForum.Controllers
     {
         private readonly AquariumForumContext _context;
 
-        public DiscussionsController(AquariumForumContext context)
+        public DiscussionsController(AquariumForumContext context) // initializes with database context
         {
             _context = context;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index() // displays list of discussions
         {
             return View(await _context.Discussion.ToListAsync());
         }
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id) // displays details of specific discussion including comments for that discussion
         {
             if (id == null)
             {
@@ -38,7 +38,7 @@ namespace AquariumForum.Controllers
             return View(discussion);
         }
 
-        public IActionResult Create()
+        public IActionResult Create() // displays form for new discussion
         {
             return View();
         }
@@ -47,7 +47,7 @@ namespace AquariumForum.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(
             [Bind("DiscussionId,Title,Content,ImageFile,CreateDate")] Discussion discussion
-        )
+        ) // handles form submission for new discussion
         {
             if (ModelState.IsValid)
             {
@@ -84,7 +84,7 @@ namespace AquariumForum.Controllers
             return View(discussion);
         }
 
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? id) // displays form for editing discussion
         {
             if (id == null)
             {
@@ -105,7 +105,7 @@ namespace AquariumForum.Controllers
         public async Task<IActionResult> Edit(
             int id,
             [Bind("DiscussionId,Title,Content,ImageFilename,CreateDate")] Discussion discussion
-        )
+        ) // handles form submission for editing discussion
         {
             if (id != discussion.DiscussionId)
             {
@@ -138,7 +138,7 @@ namespace AquariumForum.Controllers
             return View(discussion);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? id) // displays form for deleting discussion
         {
             if (id == null)
             {
@@ -158,7 +158,7 @@ namespace AquariumForum.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id) // handles form submission for deleting discussion
         {
             var discussion = await _context.Discussion.FindAsync(id);
             if (discussion != null)
