@@ -1,0 +1,99 @@
+@model AquariumForum.Models.Discussion
+
+@{
+    ViewData["Title"] = "Discussion Details";
+}
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Discussions" asp-action="Index">Discussions</a></li>
+            <li class="breadcrumb-item active">Details</li>
+        </ol>
+    </nav>
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h1 class="display-6 mb-2">@(Model?.Title)</h1>
+                    <p class="text-muted mb-2">
+                        Discussion ID: @(Model?.DiscussionId)
+                    </p>
+                    <p class="text-muted">
+                        <i class="bi bi-clock"></i>@(Model?.CreateDate.ToString("MMMM dd, yyyy")) at @(Model?.CreateDate.ToString("HH:mm"))
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                @if (Model != null && !string.IsNullOrEmpty(Model.ImageFilename))
+                {
+                    <div class="col-md-4 mb-3 mb-md-0">
+                        <div class="card">
+                            <img src="~/images/@(Model.ImageFilename)" alt="Discussion Image"
+                                 class="card-img-top img-fluid" />
+                            <div class="card-footer">
+                                <small class="text-muted">
+                                    <i class="bi bi-image"></i> Image: @Model.ImageFilename
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                }
+                <div class="@((!string.IsNullOrEmpty(Model?.ImageFilename)) ? "col-md-8" : "col-12")">
+                    <div class="card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title">Discussion Content</h5>
+                            <p class="card-text">@(Model?.Content)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title mb-0">
+                        Comments:
+                        @if (Model?.Comments != null)
+                        {
+                            @Model.Comments.Count
+                        }
+                    </h5>
+                </div>
+                <div class="card-body">
+                    @if (Model?.Comments != null && Model.Comments.Any())
+                    {
+                        foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
+                        {
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <p class="card-text mb-1">@comment.Content</p>
+                                            <small class="text-muted">
+                                                <i class="bi bi-clock"></i> @comment.CreateDate.ToString("MMM dd, yyyy HH:mm")
+                                            </small>
+                                        </div>
+                                        <div class="text-end">
+                                            <small class="text-muted">
+                                                Comment ID: @comment.CommentId
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted mb-0">
+                            <i class="bi bi-chat-dots"></i> No comments yet.
+                        </p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+@model IEnumerable<AquariumForum.Models.Discussion>
+
+@{
+    ViewData["Title"] = "Manage Discussions";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Index</h1>
+        @*<a asp-action="Create" class="btn btn-primary"> 
+            <i class="bi bi-plus-circle"></i> Create New</a> -------------- wasn't sure if having a button there really made sense *@
+
+    </div>
+
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 80px">Image</th>
+                    <th>Title</th>
+                    <th>Content</th>
+                    <th>Created</th>
+                    <th>Filename</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.ImageFilename))
+                            {
+                                <img src="~/images/@item.ImageFilename" alt="Discussion Image"
+                                     class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <img src="/src_images/fish.jpg" alt="No Image"
+                                     class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
+                            }
+                        </td>
+                        <td>
+                            <strong>@Html.DisplayFor(modelItem => item.Title)</strong>
+                        </td>
+                        <td>
+                            <span class="text-truncate d-inline-block" style="max-width: 300px;">
+                                @Html.DisplayFor(modelItem => item.Content)
+                            </span>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                <i class="bi bi-clock"></i> @item.CreateDate.ToString("MMM dd, yyyy HH:mm")
+                            </small>
+                        </td>
+                        <td>
+                            <small class="text-muted">
+                                @(string.IsNullOrEmpty(item.ImageFilename) ? "No image file is associated." : item.ImageFilename)
+                            </small>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-flex gap-2 justify-content-end">
+                                <a asp-action="Edit" asp-route-id="@item.DiscussionId"
+                                   class="btn btn-sm btn-outline-primary" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.DiscussionId"
+                                   class="btn btn-sm btn-outline-info" title="Details">
+                                    <i class="bi bi-info-circle"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.DiscussionId"
+                                   class="btn btn-sm btn-outline-danger" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

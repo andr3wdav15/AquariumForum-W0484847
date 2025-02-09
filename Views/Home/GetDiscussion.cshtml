@@ -1,0 +1,78 @@
+@model AquariumForum.Models.Discussion
+
+@{
+
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container mt-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Discussions</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+        </ol>
+    </nav>
+
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="row g-0">
+                    @if (!string.IsNullOrEmpty(Model.ImageFilename))
+                    {
+                        <div class="col-md-5">
+                            <img src="~/images/@Model.ImageFilename" alt="Discussion Image"
+                                 class="w-100 h-100"
+                                 style="object-fit: cover;" />
+                        </div>
+                    }
+                    <div class="@(!string.IsNullOrEmpty(Model.ImageFilename) ? "col-md-7" : "col-12")">
+                        <div class="card-body">
+                            <h1 class="card-title h2 mb-3">@Model.Title</h1>
+                            <p class="card-text">@Model.Content</p>
+                            <small class="text-muted">
+                                <i class="bi bi-clock"></i> @Model.CreateDate.ToString("MMM dd, yyyy HH:mm")
+                            </small>
+                            <br />
+                            <small class="text-muted">
+                                <i class="bi bi-chat"></i> @Model.Comments.Count Comments
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2><i class="bi bi-chat-square-text"></i> Comments</h2>
+                <a asp-controller="Comments" asp-action="Create" asp-route-discussionId="@Model.DiscussionId"
+                   class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add Comment
+                </a>
+            </div>
+
+            <div class="comments-section mb-5">
+                @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
+                {
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <p class="card-text">@comment.Content</p>
+                            <small class="text-muted">
+                                <i class="bi bi-clock"></i> @comment.CreateDate.ToString("MMM dd, yyyy HH:mm")
+                            </small>
+
+                        </div>
+                    </div>
+                }
+                @if (!Model.Comments.Any())
+                {
+                    <div class="alert alert-info">
+                        No comments yet. Be the first to comment!
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
