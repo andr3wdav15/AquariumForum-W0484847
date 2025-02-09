@@ -27,7 +27,7 @@
                             }
                             else
                             {
-                                <img src="/src_images/fish.jpg" alt="No Image"
+                                <img src="/src/images/fish.jpg" alt="No Image"
                                      class="img-fluid rounded" style="max-width: 150px; object-fit: cover;" />
                             }
                         </div>
@@ -36,7 +36,7 @@
                                 <h5 class="card-title">
                                     <a asp-controller="Home" asp-action="GetDiscussion"
                                        asp-route-id="@item.DiscussionId"
-                                       class="text-decoration-none text-primary fs-3">
+                                    class="link-opacity-10-hover">
                                         @Html.DisplayFor(modelItem => item.Title)
                                     </a>
                                 </h5>
