@@ -1,0 +1,61 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Profile";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+
+<h3>@ViewData["Title"]</h3>
+<partial name="_StatusMessage" for="StatusMessage" />
+<div class="row">
+    <div class="col-md-6">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+            <div class="form-floating mb-3">
+                <input asp-for="Username" class="form-control" placeholder="Please choose your username." disabled />
+                <label asp-for="Username" class="form-label"></label>
+            </div>
+            @* <div class="form-floating mb-3"> *@
+            @*     <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/> *@
+            @*     <label asp-for="Input.PhoneNumber" class="form-label"></label> *@
+            @*     <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span> *@
+            @* </div> *@
+            @* beginning of custom code *@
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Name" class="form-control" />
+                <label asp-for="Input.Name" class="form-label"></label>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.Location" class="form-control" />
+                <label asp-for="Input.Location" class="form-label"></label>
+            </div>
+            @if (!string.IsNullOrEmpty(Model.Input.ImageFilename))
+            {
+                <div class="mb-3 text-center">
+                    <img src="~/profile_img/@Model.Input.ImageFilename" alt="Profile Picture"
+                         class="img-fluid rounded mx-auto d-block" style="width: 150px; height: 150px; object-fit: cover;" />
+                </div>
+            }
+            <div class="mb-3">
+                @* change label if they have a profile picture already *@
+                @if (string.IsNullOrEmpty(Model.Input.ImageFilename))
+                {
+                    <label asp-for="Input.ImageFile" class="form-label">Upload a Profile Picture</label>
+                }
+                @if (!string.IsNullOrEmpty(Model.Input.ImageFilename))
+                {
+                    <label asp-for="Input.ImageFile" class="form-label">Update Profile Picture</label>
+                }
+                <input asp-for="Input.ImageFile" class="form-control" type="file" />
+                <span asp-validation-for="Input.ImageFile" class="text-danger"></span>
+            </div>
+            @* end of custom code *@
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

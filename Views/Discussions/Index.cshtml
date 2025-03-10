@@ -5,15 +5,10 @@
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Index</h1>
-        @*<a asp-action="Create" class="btn btn-primary"> 
-            <i class="bi bi-plus-circle"></i> Create New</a> -------------- wasn't sure if having a button there really made sense so just commented it out*@
-
-    </div>
-
+    @* table head*@
+    <h1>My Discussions</h1>
     <div class="table-responsive">
-        <table class="table align-middle">
+        <table class="table table-striped table-bordered align-middle">
             <thead class="table-light">
                 <tr>
                     <th style="width: 80px">Image</th>
@@ -24,6 +19,7 @@
                     <th class="text-end">Actions</th>
                 </tr>
             </thead>
+            @* table body information for each discussion *@
             <tbody>
                 @foreach (var item in Model.OrderByDescending(d => d.CreateDate))
                 {
@@ -31,45 +27,39 @@
                         <td>
                             @if (!string.IsNullOrEmpty(item.ImageFilename))
                             {
-                                <img src="~/images/@item.ImageFilename" alt="Discussion Image"
-                                     class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
+                                <img src="~/images/@item.ImageFilename" alt="Discussion Image" class="img-thumbnail discussion-thumbnail" />
                             }
                             else
                             {
-                                <img src="/src/images/fish.jpg" alt="No Image"
-                                     class="img-thumbnail" style="width: 60px; height: 60px; object-fit: cover;" />
+                                <small class="text-muted">No image</small>
                             }
                         </td>
                         <td>
-                            <strong>@Html.DisplayFor(modelItem => item.Title)</strong>
+                            <small class="text-muted">@item.Title</small>
                         </td>
                         <td>
-                            <span class="text-truncate d-inline-block" style="max-width: 300px;">
-                                @Html.DisplayFor(modelItem => item.Content)
-                            </span>
+                            <small class="text-muted">@item.Content</small>
                         </td>
                         <td>
                             <small class="text-muted">
-                                <i class="bi bi-clock"></i> @item.CreateDate.ToString("MMM dd, yyyy HH:mm")
+                                @item.CreateDate.ToString("MMM dd, yyyy HH:mm tt")
                             </small>
                         </td>
                         <td>
                             <small class="text-muted">
-                                @(string.IsNullOrEmpty(item.ImageFilename) ? "No image file is associated." : item.ImageFilename)
+                                @(string.IsNullOrEmpty(item.ImageFilename) ? "No image file" : item.ImageFilename)
                             </small>
                         </td>
+                        @* buttons for edit, details, delete *@
                         <td class="text-end">
                             <div class="d-flex gap-2 justify-content-end">
-                                <a asp-action="Edit" asp-route-id="@item.DiscussionId"
-                                   class="btn btn-sm btn-outline-primary" title="Edit">
+                                <a asp-action="Edit" asp-route-id="@item.DiscussionId" class="btn btn-sm btn-outline-primary" title="Edit">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <a asp-action="Details" asp-route-id="@item.DiscussionId"
-                                   class="btn btn-sm btn-outline-info" title="Details">
+                                <a asp-action="Details" asp-route-id="@item.DiscussionId" class="btn btn-sm btn-outline-info" title="Details">
                                     <i class="bi bi-info-circle"></i>
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.DiscussionId"
-                                   class="btn btn-sm btn-outline-danger" title="Delete">
+                                <a asp-action="Delete" asp-route-id="@item.DiscussionId" class="btn btn-sm btn-outline-danger" title="Delete">
                                     <i class="bi bi-trash"></i>
                                 </a>
                             </div>

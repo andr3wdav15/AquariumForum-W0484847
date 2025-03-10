@@ -1,3 +1,5 @@
+@using Microsoft.AspNetCore.Identity
+@using AquariumForum.Data
 @model IEnumerable<AquariumForum.Models.Discussion>
 
 @{
@@ -5,48 +7,63 @@
 }
 
 <div class="container mt-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1>Discussions</h1>
-        <button type="button" class="btn btn-primary"
-                onclick="window.location.href='@Url.Action("Create", "Discussions")'">
-            <i class="bi bi-plus-circle"></i> Create New Discussion
-        </button>
-    </div>
-
-    <div class="row">
-        <div class="col-12">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Home</h1>
+                @* show create button if logged in *@
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Discussions" asp-action="Create" class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Create New Discussion
+                    </a>
+                }
+            </div>
+            @* discussions *@
             @foreach (var item in Model)
             {
-                <div class="card mb-3 shadow-sm">
+                <div class="card mb-4 shadow-sm border-light rounded-3 mx-auto">
                     <div class="row g-0">
-                        <div class="col-md-2 d-flex align-items-center justify-content-center p-3">
-                            @if (!string.IsNullOrEmpty(item.ImageFilename))
-                            {
-                                <img src="~/images/@item.ImageFilename" alt="Discussion Image" class="img-fluid rounded"
-                                     style="max-width: 150px; object-fit: cover;" />
-                            }
-                            else
-                            {
-                                <img src="/src/images/fish.jpg" alt="No Image"
-                                     class="img-fluid rounded" style="max-width: 150px; object-fit: cover;" />
-                            }
-                        </div>
-                        <div class="col-md-10">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <a asp-controller="Home" asp-action="GetDiscussion"
-                                       asp-route-id="@item.DiscussionId"
-                                    class="link-opacity-10-hover">
-                                        @Html.DisplayFor(modelItem => item.Title)
-                                    </a>
-                                </h5>
-                                <p class="card-text">@(item.Content.Length > 400 ? item.Content.Substring(0, 400) + "..." : item.Content)</p>
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <small class="text-muted">
+                        @if (!string.IsNullOrEmpty(@item.ImageFilename))
+                        {
+                            <div class="col-12 d-flex align-items-center justify-content-center discussion-image-container">
+                                <img src="~/images/@item.ImageFilename" alt="Discussion Image" class="discussion-image" />
+                            </div>
+                        }
+                        <div class="col-12 d-flex flex-column">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title mb-0">
+                                        <a asp-controller="Home" asp-action="GetDiscussion" asp-route-id="@item.DiscussionId">
+                                            @item.Title
+                                        </a>
+                                    </h5>
+                                    <div class="d-flex align-items-center">
+                                        <a asp-controller="Home" asp-action="Profile" asp-route-id="@item.ApplicationUserId"
+                                           class="text-decoration-none d-flex align-items-center">
+                                            <small class="text-muted ms-2">@item.ApplicationUser?.Name</small>
+                                            @if (!string.IsNullOrEmpty(@item.ApplicationUser?.ImageFilename))
+                                            {
+                                                <img src="~/profile_img/@item.ApplicationUser.ImageFilename"
+                                                     alt="User Profile Picture" class="rounded-circle profile-image-small" />
+                                            }
+                                            else
+                                            {
+                                                <img src="/src/images/default-profile.png" alt="Default Profile Picture"
+                                                     class="rounded-circle profile-image-small" />
+                                            }
+                                        </a>
+                                    </div>
+                                </div>
+                                <p class="card-text text-muted flex-grow-1">
+                                    @(item.Content.Length > 600 ? item.Content.Substring(0, 600) + "..." : item.Content)
+                                </p>
+                                <div class="d-flex justify-content-between align-items-center text-muted mt-auto">
+                                    <small>
                                         <i class="bi bi-chat"></i> @item.Comments.Count Comments
                                     </small>
-                                    <small class="text-muted">
-                                        <i class="bi bi-clock"></i> @item.CreateDate.ToString("MMM dd, yyyy HH:mm")
+                                    <small>
+                                        <i class="bi bi-clock"></i> @item.CreateDate.ToString("MMM dd, yyyy HH:mm tt")
                                     </small>
                                 </div>
                             </div>

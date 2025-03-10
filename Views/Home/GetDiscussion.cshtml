@@ -1,68 +1,125 @@
 @model AquariumForum.Models.Discussion
-
 @{
-
-    ViewData["Title"] = Model.Title;
+    ViewData["Title"] = "GetDiscussion";
 }
 
 <div class="container mt-4">
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Discussions</a></li>
-            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
-        </ol>
-    </nav>
-
+    @* discussion information *@
     <div class="row justify-content-center">
-        <div class="col-12">
-            <div class="card shadow-sm mb-4">
+        <div class="col-12 col-md-8">
+            @* breadcrumb nav back *@
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Discussions</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+                </ol>
+            </nav>
+            <h1>Discussion</h1>
+            <div class="card mb-4 shadow-sm border-light rounded-3 mx-auto">
                 <div class="row g-0">
                     @if (!string.IsNullOrEmpty(Model.ImageFilename))
                     {
-                        <div class="col-md-5">
-                            <img src="~/images/@Model.ImageFilename" alt="Discussion Image"
-                                 class="w-100 h-100"
-                                 style="object-fit: cover;" />
+                        <div class="col-12 d-flex align-items-center justify-content-center discussion-image-container">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#imageModal">
+                                <img src="~/images/@Model.ImageFilename" alt="Discussion Image" class="discussion-image" />
+                            </a>
+                        </div>
+                        @* modal for image click *@
+                        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content border-0">
+                                    <div class="modal-body p-0">
+                                        <img src="~/images/@Model.ImageFilename" alt="Discussion Image" class="img-fluid d-block mx-auto" />
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     }
-                    <div class="@(!string.IsNullOrEmpty(Model.ImageFilename) ? "col-md-7" : "col-12")">
-                        <div class="card-body">
-                            <h1 class="card-title h2 mb-3">@Model.Title</h1>
-                            <p class="card-text">@Model.Content</p>
-                            <small class="text-muted">
-                                <i class="bi bi-clock"></i> @Model.CreateDate.ToString("MMM dd, yyyy HH:mm")
-                            </small>
-                            <br />
-                            <small class="text-muted">
-                                <i class="bi bi-chat"></i> @Model.Comments.Count Comments
-                            </small>
+                    <div class="col-12 d-flex flex-column">
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title mb-0">@Model.Title</h5>
+                                <div class="d-flex align-items-center">
+                                    <a asp-controller="Home" asp-action="Profile" asp-route-id="@Model.ApplicationUserId"
+                                       class="text-decoration-none d-flex align-items-center">
+                                        <small class="text-muted ms-2">@Model.ApplicationUser?.Name</small>
+                                        @if (!string.IsNullOrEmpty(@Model.ApplicationUser?.ImageFilename))
+                                        {
+                                            <img src="~/profile_img/@Model.ApplicationUser.ImageFilename"
+                                                 alt="User Profile Picture" class="rounded-circle profile-image-small" />
+                                        }
+                                        else
+                                        {
+                                            <img src="/src/images/default-profile.png" alt="Default Profile Picture"
+                                                 class="rounded-circle profile-image-small" />
+                                        }
+                                    </a>
+                                </div>
+                            </div>
+                            <p class="card-text text-muted flex-grow-1">
+                                @Model.Content
+                            </p>
+                            <div class="d-flex justify-content-between align-items-center text-muted mt-auto">
+                                <small>
+                                    <i class="bi bi-chat"></i> @Model.Comments.Count Comments
+                                </small>
+                                <small>
+                                    <i class="bi bi-clock"></i> @Model.CreateDate.ToString("MMM dd, yyyy hh:mm tt")
+                                </small>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+    @* add comment button *@
     <div class="row justify-content-center">
-        <div class="col-lg-12">
+        <div class="col-12 col-md-8">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2><i class="bi bi-chat-square-text"></i> Comments</h2>
-                <a asp-controller="Comments" asp-action="Create" asp-route-discussionId="@Model.DiscussionId"
-                   class="btn btn-primary">
-                    <i class="bi bi-plus-circle"></i> Add Comment
-                </a>
+                @* if user logged in show button *@
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <a asp-controller="Comments" asp-action="Create" asp-route-discussionId="@Model.DiscussionId"
+                       class="btn btn-primary">
+                        <i class="bi bi-plus-circle"></i> Add Comment
+                    </a>
+                }
             </div>
-
+            @* comments *@
             <div class="comments-section mb-5">
                 @foreach (var comment in Model.Comments.OrderByDescending(c => c.CreateDate))
                 {
                     <div class="card mb-3">
-                        <div class="card-body">
-                            <p class="card-text">@comment.Content</p>
-                            <small class="text-muted">
-                                <i class="bi bi-clock"></i> @comment.CreateDate.ToString("MMM dd, yyyy HH:mm")
-                            </small>
+                        <div class="card-body d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="d-flex align-items-center">
+                                    <a asp-controller="Home" asp-action="Profile" asp-route-id="@comment.ApplicationUserId"
+                                       class="text-decoration-none d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(@comment.ApplicationUser?.ImageFilename))
+                                        {
+                                            <img src="~/profile_img/@comment.ApplicationUser.ImageFilename"
+                                                 alt="User Profile Picture" class="rounded-circle profile-image-med" />
+                                        }
+                                        else
+                                        {
+                                            <img src="/src/images/default-profile.png" alt="Default Profile Picture"
+                                                 class="rounded-circle profile-image-med" />
+                                        }
+                                        <p class="text-muted mx-3 mt-4">@comment.ApplicationUser?.Name</p>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="comment-text mb-3">
+                                <p class="card-text text-muted">@comment.Content</p>
+                            </div>
 
+                            <div class="mt-auto text-muted d-flex align-items-end ms-auto">
+                                <small>
+                                    <i class="bi bi-clock"></i> @comment.CreateDate.ToString("MMM dd, yyyy hh:mm tt")
+                                </small>
+                            </div>
                         </div>
                     </div>
                 }
@@ -73,6 +130,7 @@
                     </div>
                 }
             </div>
+
         </div>
     </div>
 </div>

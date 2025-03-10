@@ -1,4 +1,5 @@
-﻿using AquariumForum.Data;
+using AquariumForum.Data;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,12 @@ builder.Services.AddDbContext<AquariumForumContext>(options =>
             )
     )
 );
+
+builder // set requireconfirmed to false
+    .Services.AddDefaultIdentity<ApplicationUser>(options =>
+        options.SignIn.RequireConfirmedAccount = false
+    )
+    .AddEntityFrameworkStores<AquariumForumContext>();
 
 builder.Services.AddControllersWithViews();
 
@@ -28,5 +35,7 @@ app.MapStaticAssets();
 
 app.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
+
+app.MapRazorPages().WithStaticAssets();
 
 app.Run();

@@ -1,12 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using AquariumForum.Data;
 
 namespace AquariumForum.Models
 {
     public class Discussion
     {
         [Display(Name = "Discussion ID")]
-        public int DiscussionId { get; set; }
+        public int DiscussionId { get; set; } // primary key
 
         [Display(Name = "Discussion Title")]
         public string Title { get; set; } = string.Empty;
@@ -26,5 +27,10 @@ namespace AquariumForum.Models
         [NotMapped]
         [Display(Name = "Image")]
         public IFormFile? ImageFile { get; set; } // not stored in database
+
+        [Display(Name = "User ID")]
+        public string ApplicationUserId { get; set; } = string.Empty; // foreign key
+
+        public ApplicationUser? ApplicationUser { get; set; } // navigation property
     }
 }

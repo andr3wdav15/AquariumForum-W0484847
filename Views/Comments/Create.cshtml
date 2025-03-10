@@ -5,29 +5,32 @@
 }
 
 <div class="container mt-4">
+    @* breadcrumb nav *@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Discussions</a></li>
             <li class="breadcrumb-item">
-                <a asp-controller="Home" asp-action="GetDiscussion"
-                   asp-route-id="@ViewBag.DiscussionId">Back to Discussion</a>
+                <a asp-controller="Home" asp-action="GetDiscussion" asp-route-id="@Model.DiscussionId">
+                    Back to
+                    Discussion
+                </a>
             </li>
             <li class="breadcrumb-item active">Add Comment</li>
         </ol>
     </nav>
-
+    @* form for comment creation *@
     <div class="card shadow-sm">
         <div class="card-body">
             <h1 class="card-title mb-4">Add a Comment</h1>
-
             <form asp-action="Create" method="post">
-                <input type="hidden" name="discussionId" value="@ViewBag.DiscussionId" />
+                <input type="hidden" asp-for="DiscussionId" />
                 <div class="form-group mb-3">
                     <label asp-for="Content" class="form-label">Your Comment</label>
                     <textarea asp-for="Content" class="form-control" rows="4"
                               placeholder="Share your thoughts..."></textarea>
                     <span asp-validation-for="Content" class="text-danger"></span>
                 </div>
+                @* post button *@
                 <div class="d-flex justify-content-end align-items-center">
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-send"></i> Post Comment

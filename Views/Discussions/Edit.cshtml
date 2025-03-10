@@ -5,34 +5,31 @@
 }
 
 <div class="container mt-4">
+    @* breadcrumb nav *@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a asp-controller="Discussions" asp-action="Index">Index</a></li>
             <li class="breadcrumb-item active">Edit Discussion</li>
         </ol>
     </nav>
-
+    @* edit discussion form *@
     <div class="card shadow-sm">
         <div class="card-body">
             <h2 class="card-title mb-4">Edit Discussion</h2>
-
             <form asp-action="Edit" enctype="multipart/form-data">
                 <div asp-validation-summary="All" class="text-danger"></div>
                 <input type="hidden" asp-for="DiscussionId" />
-
                 <div class="mb-3">
                     <label asp-for="Title" class="form-label">Discussion Title</label>
                     <input asp-for="Title" class="form-control" placeholder="Enter a descriptive title" />
                     <span asp-validation-for="Title" class="text-danger"></span>
                 </div>
-
                 <div class="mb-3">
                     <label asp-for="Content" class="form-label">Discussion Content</label>
                     <textarea asp-for="Content" class="form-control" rows="6"
                               placeholder="Share your thoughts, questions, or experiences..."></textarea>
                     <span asp-validation-for="Content" class="text-danger"></span>
                 </div>
-
                 <div class="mb-4">
                     <label asp-for="ImageFile" class="form-label">Upload Image</label>
                     <input asp-for="ImageFile" type="file" class="form-control" accept="image/*" />
@@ -42,13 +39,12 @@
                     }
                     <span asp-validation-for="ImageFile" class="text-danger"></span>
                 </div>
-
+                @* save button *@
                 <div class="d-flex justify-content-end align-items-center">
                     <button type="submit" class="btn btn-primary">
                         <i class="bi bi-save"></i> Save Changes
                     </button>
                 </div>
-
             </form>
         </div>
     </div>
